@@ -1,0 +1,20 @@
+<template>
+    <template if:true={repos}>
+        <lightning-layout class="main" multiple-rows>
+            
+            <template for:each={repos} for:item="repo">
+                <div class="card" title={repo.category} key={repo.id}>
+                    <img src={repo.image}></img>
+                    <h1>Category : {repo.category}</h1>
+                    <p>Price : {repo.price} $</p>
+                    <div class="btn">
+                    <lightning-button variant="brand" name="btn" id={repo.id} label="Add To Cart" onclick={handleIncrease} title="Primary action"
+                        class="slds-m-left_x-small"></lightning-button>
+                        <lightning-button-icon icon-name="utility:delete" name="delete" id={repo.id}  alternative-text="Delete" onclick={handleDecrease} class="slds-m-left_xx-small" title="Delete"></lightning-button-icon>
+                    </div>
+                    </div>
+            </template>
+        </lightning-layout>
+    </template>
+    
+</template>

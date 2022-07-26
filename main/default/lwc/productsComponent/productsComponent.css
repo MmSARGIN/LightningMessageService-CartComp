@@ -1,0 +1,43 @@
+.main{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background-color: aliceblue;
+}
+.card{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    border: 1px solid rgba(218, 218, 218, 0.5);
+    border-radius: 20px;
+    width: 25%;
+    height: 30vh;
+    margin: 5px;
+}
+img{
+    max-height: 60%;
+    min-height: 60%;
+    border-radius: 50px;
+    max-width: 70%;
+    min-width: 40%;
+}
+img:hover{
+    max-height: 60%;
+    min-height: 60%;
+    
+    max-width: 70%;
+    min-width: 40%;
+}
+button{
+    background-color: darkcyan;
+    color: azure;
+    border: none;
+    border-radius: 10px;
+}
+.btn{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}

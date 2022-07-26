@@ -1,0 +1,19 @@
+<template>
+    <lightning-card  title="Cart">
+        <lightning-button label="Confirm Cart" slot="actions"></lightning-button>
+        <p class="slds-p-horizontal_small">My Cart : {countProducts} Item</p>
+        <p class="slds-p-horizontal_small">My Cart Price: {comingPrice} $</p>
+            <hr>
+            <template for:each={added} for:item="item">
+                <div class="card" key={item.id}>
+                    <img src={item.image}></img>
+                    <hr>
+                    <h1>{item.title}</h1>
+                    <hr>
+                    <h1>Description  : {item.description}</h1>
+                    <hr>
+                    <p>Price : {item.price} $</p>
+                </div>
+            </template>
+    </lightning-card>
+</template>
