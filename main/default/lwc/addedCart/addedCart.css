@@ -1,0 +1,24 @@
+
+.orders{
+    width: 22%;
+    border: solid 1px orangered;
+    border-radius: 20px;
+    margin: 5px;
+    padding: 5px;
+}
+.list{
+    width: 100%;
+    margin-top: 10px;
+}
+.listItem{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+}
+.img{
+    height: 20vh;
+    width: 100%;
+}

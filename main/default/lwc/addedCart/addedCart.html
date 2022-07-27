@@ -1,10 +1,11 @@
 <template>
     <lightning-card  title="Cart">
-        <lightning-button label="Confirm Cart" slot="actions"></lightning-button>
+        <lightning-button label="Confirm Cart" slot="actions" onclick={handleClick} ></lightning-button>
         <p class="slds-p-horizontal_small">My Cart : {countProducts} Item</p>
         <p class="slds-p-horizontal_small">My Cart Price: {comingPrice} $</p>
             <hr>
             <template for:each={added} for:item="item">
+                
                 <div class="card" key={item.id}>
                     <img src={item.image}></img>
                     <hr>
@@ -16,4 +17,54 @@
                 </div>
             </template>
     </lightning-card>
+    <template if:true={confirmForm}>
+    <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open slds-modal_small">
+        <div class="slds-modal__container">
+        <button onclick={handleClick} class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse">
+        <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+        <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#close"></use>
+        </svg>
+        <span class="slds-assistive-text">Cancel and close</span>
+        </button>
+        <div class="slds-modal__header">
+        <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Confirm Cart and Payment</h1>
+        </div>
+        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+            <form onchange={handleChange}>
+      <lightning-input name="name" label="Name" required ></lightning-input>
+      <lightning-input name="lastname" label="Lastname" required ></lightning-input>
+        <lightning-input name="phone" label="Phone"></lightning-input>
+        <lightning-input name="card" label="Card Number" required maxlength="19" placeholder="xxxx xxxx xxxx xxxx"></lightning-input>
+        <lightning-input name="date" placeholder="YY/MM" required label="Date"></lightning-input>
+        <lightning-input name="cvv" label="CVV" placeholder="CVV" max-length="3" required type="number"></lightning-input>
+        <lightning-input name="address" label="Address" placeholder="Address" ></lightning-input>
+        <hr>
+        <p class="slds-p-horizontal_small">My Cart : {countProducts} Item</p>
+        <p class="slds-p-horizontal_small">My Cart Price: {comingPrice} $</p>
+    </form>
+        <hr>
+        <h1>ORDERS</h1>
+
+        <ul class="list">
+            <li class="listItem">
+        <template for:each={added} for:item="item">
+            
+            <div class="orders card" key={item.id}>
+                <img src={item.image} class="img"></img>
+                <p>Price : {item.price} $</p>
+            </div>
+        
+        </template>
+    </li>
+    </ul>
+        </div>
+       
+        <div class="slds-modal__footer">
+        <button onclick={handleClick} class="slds-button slds-button_neutral" aria-label="Cancel and close">Cancel</button>
+        <button class="slds-button slds-button_brand" onclick={handleConfirm} >Confirm</button>
+        </div>
+        </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    </template>  
 </template>
