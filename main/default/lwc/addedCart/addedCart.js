@@ -3,9 +3,12 @@ import { subscribe, MessageContext } from 'lightning/messageService';
 import ADD_TO_CART from '@salesforce/messageChannel/Add_Cart__c';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import addNewOrder from "@salesforce/apex/AddOrder.addNewOrder";
+import makeGetCallout from '@salesforce/apex/StripeAPIHandler.makeGetCallout';
+import Amount from '@salesforce/schema/Opportunity.Amount';
 
 export default class AddedCart extends LightningElement {
-    
+
+//my var
     counter = 0;
     subscription = null;
     title;
@@ -28,6 +31,13 @@ export default class AddedCart extends LightningElement {
     formObj;
     formDate;
     formAddress;
+      //stripe var
+      customerEmail = 'exampleCustomer@example.com';
+      amount = 0;
+      paymentMethodOne='card';
+      paymentMethodTwo='klarna';
+      customerID = '';
+      currency = 'usd';
     
     @wire(MessageContext)
     messageContext;
@@ -119,7 +129,7 @@ handleChange(event){
 
      
 }
-handleConfirm(){
+async handleConfirm(){
     this.formObj ={
         Name : this.formName,
         LastName :this.formLastName,
@@ -148,6 +158,52 @@ handleConfirm(){
 
         })
         .then(res => console.log(res))
+         //STRIPE
+     //Get Customer
+     this.amount = this.comingPrice;
+     this.customerEmail = `${this.formName.toLowerCase() + this.formLastName.toLowerCase()}@salesforce.com`
+     var customerID;
+     var url = "https://api.stripe.com//v1/customers?email=" + this.customerEmail + "&limit=1";
+     var method = 'GET';
+     var urlencoded = new URLSearchParams();
+     let pgetcustomer = await makeGetCallout({urlencoded:null,url:url, method:method});
+     var getcustomer = JSON.parse(pgetcustomer);
+     console.log('bakalim kanka',getcustomer)
+     if (getcustomer.data.length >= 1){
+         customerID = getcustomer.data[0].id
+     }
+     //Create Customer if no customer is found
+     if (getcustomer.data.length == 0){
+         var urlencoded = new URLSearchParams();
+         urlencoded.append("email", this.customerEmail);
+         var url = "https://api.stripe.com//v1/customers";
+         var method = "POST";
+         let pcreatecustomer = await makeGetCallout({urlencoded:urlencoded.toString(),url:url, method:method});
+         var createcustomer = JSON.parse(pcreatecustomer);
+         customerID = createcustomer.id
+     }
+
+     //Create link
+     var urlencoded = new URLSearchParams();
+     urlencoded.append("cancel_url", "https://www.google.com");
+     urlencoded.append("success_url", "https://gfa2-dev-ed.lightning.force.com/lightning/page/home");
+     urlencoded.append("customer", customerID);
+     urlencoded.append("customer_update[address]", "auto");
+     urlencoded.append("customer_update[name]", "auto");
+     urlencoded.append("line_items[0][price_data][currency]", this.currency);
+     urlencoded.append("line_items[0][price_data][product_data][name]", "Sales Force Example");
+     urlencoded.append("line_items[0][price_data][product_data][description]", "Sales Force Example");
+     urlencoded.append("line_items[0][price_data][unit_amount_decimal]", this.amount);
+     urlencoded.append("line_items[0][quantity]", "1");
+     urlencoded.append("mode", "payment");
+     urlencoded.append("payment_method_types[0]", this.paymentMethodOne);
+     urlencoded.append("payment_method_types[1]", this.paymentMethodTwo);
+     var method = 'POST';
+     var url = 'https://api.stripe.com/v1/checkout/sessions'
+     let pcheckout = await makeGetCallout({urlencoded:urlencoded.toString(),url:url, method:method});
+     var checkout = JSON.parse(pcheckout);
+     window.open(checkout.url);
+     //STRIPE FINISH
         this.confirmForm = !this.confirmForm;
         this.added = [];
         this.countProducts = 0;
@@ -176,7 +232,7 @@ handleConfirm(){
     this.formCVV = '';
     this.formDate = '';
     this.formPhone = '';
-    
+   
 }
 
 

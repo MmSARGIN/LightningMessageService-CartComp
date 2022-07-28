@@ -8,7 +8,7 @@ public with sharing class AddOrder {
                 Address__c = address,
                 CVV__c = cvv,
                 Card_Number__C = card,
-                Date_Time__c = orderdate,
+                Order_Date__c = orderdate,
                 Order_ID__C = orderid,
                 Price__c = price
             );
